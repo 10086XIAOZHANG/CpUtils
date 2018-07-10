@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Extend</title>
+</head>
+<body>
+<script type="text/javascript">
+    //    原型继承的第一种实现
+    function Father(name,age){
+        this.name=name;
+        this.age=age;
+    }
+    Father.prototype.showName=function(name){
+        console.log(name)
+    }
+    function Child(id,name,age){
+        Father.apply(this,[name,age]) //改变User构造函数的执行上下文，this指向User1,完成继承,但不过User的prototype的属性无法继承
+        this.id=id;
+    }
+//    原型继承的第二种实现
+    function Father1(name,age){
+        this.name=name;
+        this.age=age;
+        this.tag=[1,2,3]
+    }
+    function Child1(id){
+        this.id=id;
+    }
+    Child1.prototype =new Father1('zs','43'); //prototype 所以Child1的所有创建的实例对象都指向的是同一个对象，当实例对象修改父类对象的属性时，全部都会改变
+    var child1=new Child1(23)
+    child1.tag.push(4)
+    var child2=new Child1(23)
+    console.log(child1,child2)
+
+    //  原型继承的第三种实现 会重复执行Father3中的代码
+    function Father3(name,age){
+        this.name=name;
+        this.age=age;
+        this.tag=[1,2,3]
+    }
+    function Child3(id){
+        Father3.call(this); //创建实例对象时，会在Child3中找Father3,通过构造函数的方式，已经找到Father3中的属性，就不会原型链中找，所以创建实例时，Father3的属性互不干扰
+        this.id=id;
+    }
+    Child3.prototype =new Father3('zs','43'); //prototype 所以Child1的所有创建的实例对象都指向的是同一个对象，当实例对象修改父类对象的属性时，全部都会改变
+    var child3=new Child3(23)
+    child3.tag.push(4)
+    var child4=new Child3(23)
+    console.log(child3,child4)
+
+    //  原型继承的第四种实现
+    function Father4(name,age){
+        this.name=name;
+        this.age=age;
+        this.tag=[1,2,3]
+    }
+    function Child4(id){
+        Father4.call(this); //创建实例对象时，会在Child3中找Father3,通过构造函数的方式，已经找到Father3中的属性，就不会原型链中找，所以创建实例时，Father3的属性互不干扰
+        this.id=id;
+    }
+    Child4.prototype =Father4.prototype //解决第三种执行两次父类构造函数的问题，但会出现Child4.prototype和Father4.prototype指向的是同一块地址，则prototype中的constuctor一样
+    var child5=new Child4(23)
+    child5.tag.push(4)
+    var child6=new Child4(23)
+    console.log(child5,child6)
+    console.log(child5.constructor===child6.constructor && child6.constructor===Father4)//true
+
+    //  原型继承的第五种实现
+    function Father5(name,age){
+        this.name=name;
+        this.age=age;
+        this.tag=[1,2,3]
+    }
+    function Child5(id){
+        Father5.call(this); //创建实例对象时，会在Child3中找Father3,通过构造函数的方式，已经找到Father3中的属性，就不会原型链中找，所以创建实例时，Father3的属性互不干扰
+        this.id=id;
+    }
+    Child5.prototype =Object.create(Father5.prototype) //解决第四种中的问题,重新创建一个新的原型对象
+    Child5.constructor=Child5
+    var child7=new Child5(23)
+    child7.tag.push(4)
+    var child8=new Child5(23)
+    console.log(child7,child8)
+    console.log(child7.constructor===child8.constructor && child8.constructor===Father5)//false
+</script>
+</body>
+</html>

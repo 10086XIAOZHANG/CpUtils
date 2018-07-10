@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RequireJs</title>
+</head>
+<body>
+<script type="text/javascript">
+    (function(window){
+        function myRequireJs(requireList,callback) {
+            var count=0;
+            var nodeList= requireList.map(function (item) {
+                var ele=document.createElement('script');
+                ele.src=item;
+                ele.async=true;
+                ele.type='text/javascript';
+                return ele;
+            })
+            nodeList.forEach(function (item) {
+                document.body.appendChild(item); //模拟requirejs引用模块
+                item.addEventListener('load',function () {
+                    count+=1;
+                    if(count===requireList.length&&count===nodeList.length){
+                        //使用记数的方式记录模块的加载，所有依赖的模块加载完成，执行callback
+                        callback();
+                    }
+                },false);
+            })
+            if(count===requireList.length){
+                callback();
+            }
+        }
+        myRequireJs(["./module/module1.js", "./module/module2.js", "./module/module3.js"],function () {
+            console.log('所有的依赖的模块加载完成')
+        })
+    })(window)
+</script>
+</body>
+</html>

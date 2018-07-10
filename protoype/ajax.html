@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax</title>
+</head>
+<body>
+<section>
+    <p id="A3"></p>
+</section>
+<script type="text/javascript">
+    (function(window){
+        function callback(xml){
+            if(xml.readyState === 4){
+                if(xml.status === '200' || xml.status === '306'){
+                    document.getElementById('A3').innerHTML=xml.responseText;
+                }
+            }
+        }
+        function readlyXmlDoc(opt){
+            var url=opt.url,
+                data=opt.data || {},
+                type =opt.type.toUpperCase() || '';
+            xml =  XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject()
+            var i,paramsArr=[],paramsStr='';
+            for(i in data){
+                if(data.hasOwnProperty(i)){
+                    paramsArr.push(i+'='+data[i]);
+                }
+            }
+            paramsStr=paramsArr.join('&');
+            if(type==='GET'){
+                if(xml){
+                    xml.onreadystatechange = callback(xml)
+                    xml.open(type,paramsStr?url+'?'+paramsArr:url,true)
+                    xml.send(null)
+                }
+            }else if(type==='POST'){
+                xml.onreadystatechange = callback(xml)
+                xml.open(type,url,true);
+                xml.send(paramsStr)
+            }
+        }
+        var opt= {
+            type:'GET',
+            url:'https://api.douban.com/v2/book/search?q=javascript&count=1'
+        }
+        readlyXmlDoc(opt)
+        //已拦截跨源请求：同源策略禁止读取位于 https://api.douban.com/v2/book/search?q=javascript&count=1 的远程资源。
+        //
+        //（原因：CORS 头缺少 'Access-Control-Allow-Origin'）。
+
+        //JSONP
+        // 动态创建script,利用script中的src不受同源策略的限制，获取资源
+        window.handleResponse=function(response){
+            console.log(response)
+        }
+        var scriptEle=  document.createElement("script");
+        scriptEle.src="https://api.douban.com/v2/book/search?q=javascript&count=1&callback=handleResponse";
+        document.body.insertBefore(scriptEle,document.body.firstChild)
+
+        //Hash 动态创建iframe
+        // A页面
+        var iframe =document.createElement('iframe')
+        iframe.src='http://www.cnblogs.com/lab/cscript/cs2.html'+'#'+data;
+        document.body.appendChild(iframe);
+        // B页面
+        window.onhashchange=function(){
+            console.log(window.location.hash)
+        }
+
+        // postMessage HTML5Api完成跨域
+
+        window.postMessage('data','www.cnblog.com')
+
+        //在B窗口中监听message
+        window.addEventListener('message',function(event){
+            if (event.origin !== "www.cnblog.com") return;
+            console.log(event.data);
+            console.log(event.origin);
+            console.log(event.source);
+        })
+
+
+        //WebSorket
+        var websorket =new WebSocket('www.cnblog.com:1202');
+        websorket.onopen=function (event) {
+            websorket.send('message data')
+        }
+        websorket.onmessage=function (evt) {
+            console.log(evt.data)
+            websorket.close()
+        }
+        websorket.onclose=function (evt) {
+            console.log('websorket closed')
+        }
+        //CORS 如果浏览器觉得这个ajax请求是跨域的，会拦截这个请求，然后再http header 中加origin
+        //服务器端应加Access-Control-Allow-Origin
+        fetch("http://localhost:8000/API",{
+            headers:{
+                'content-type':'application/json'
+            },
+            mode:'cors',
+            method:'POST',
+            body: JSON.stringify(body)
+        }).then(function (reponse) {
+            return reponse.json()
+        }).then(function (result) {
+            console.log(result)
+        })
+    })(window)
+</script>
+</body>
+</html>

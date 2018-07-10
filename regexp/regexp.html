@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RegExp</title>
+</head>
+<body>
+  <script type="text/javascript">
+      var str="   zf cd       ";
+      console.log(str.replace(/(^\s*)|(\s*$)/g,''));
+      var email = "example3@qq.cn";
+      var test = /\w+\w*@\w+\.\w+\w{1,2}/
+      console.log(test.test(email))
+  </script>
+</body>
+</html>

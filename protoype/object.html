@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Object</title>
+</head>
+<body>
+<script type="text/javascript" src="object.js"></script>
+<script type="text/javascript">
+    var arr=['old', 1, true, ['old1', 'old2'], {old: {ac:'123'}}];
+    console.log(arr)
+    var shallowArr=new CpObject(arr).shallowCopy();
+    shallowArr[shallowArr.length-1].old.ac='456'
+    console.log(shallowArr)
+</script>
+</body>
+</html>

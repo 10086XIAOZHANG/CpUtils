@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Func</title>
+</head>
+<body>
+<script type="text/javascript" src="func.js"></script>
+<script type="text/javascript">
+    function add(a,b){
+        return a+b+this.value;
+    }
+//    var patial = add.bind(null,1); //改变了this的指向的偏函数
+//    console.log(patial(2))
+var func=new CpFunc();
+// var value=12;
+//var addOne= func.partial(add,2);
+// var obj={
+//     value:3,
+//     addOne:addOne,
+// }
+//console.log(obj.addOne(3))
+//    console.log(func.lazyFunc())
+//    setTimeout(function () {
+//        console.log(func.lazyFunc())
+//    },2000)
+
+    var greet = function(name) {
+        return ('hello ' + name).toUpperCase();
+    }
+
+    // pointfree
+    // 先定义基本运算，这些可以封装起来复用
+    var toUpperCase = function(x) { return x.toUpperCase(); };
+    var hello = function(x) { return 'HELLO, ' + x; };
+
+    var greet = func.compose(hello, toUpperCase);
+     greet('kevin');
+//var data = {
+//        result: "SUCCESS",
+//        tasks: [
+//            {id: 104, complete: false,            priority: "high",
+//                dueDate: "2013-11-29",      username: "Scott",
+//                title: "Do something",      created: "9/22/2013"},
+//            {id: 105, complete: false,            priority: "medium",
+//                dueDate: "2013-11-22",      username: "Lena",
+//                title: "Do something else", created: "9/22/2013"},
+//            {id: 107, complete: true,             priority: "high",
+//                dueDate: "2013-11-22",      username: "Mike",
+//                title: "Fix the foo",       created: "9/22/2013"},
+//            {id: 108, complete: false,            priority: "low",
+//                dueDate: "2013-11-15",      username: "Punam",
+//                title: "Adjust the bar",    created: "9/25/2013"},
+//            {id: 110, complete: false,            priority: "medium",
+//                dueDate: "2013-11-15",      username: "Scott",
+//                title: "Rename everything", created: "10/2/2013"},
+//            {id: 112, complete: true,             priority: "high",
+//                dueDate: "2013-11-27",      username: "Lena",
+//                title: "Alter all quuxes",  created: "10/5/2013"}
+//        ]
+//    };
+//var fetchData=function (data) {
+//    return Promise.resolve(data);
+//}
+//function getIncompleteTaskSummaries (name) {
+//    fetchData(data).then(function (data) {
+//        return data.tasks;
+//    }).then(function (tasks) {
+//       return tasks.filter(function (item) {
+//            return item.username===name;
+//        })
+//    }).then(function (tasks) {
+//        return tasks.map(function (item) {
+//            return {
+//                ids:item.id,
+//                priorities:item.priority,
+//                titles:item.title,
+//                dueDate:item.dueDate
+//        }
+//        })
+//    }).then(function (tasks) {
+//        return tasks.sort(function (a,b) {
+//            var aDueDate=a.dueDate;
+//            var bDueDate=b.dueDate;
+//            return aDueDate>bDueDate;
+//        })
+//    }).then(function (tasks) {
+//        console.log(tasks);
+//    })
+//}
+//    getIncompleteTaskSummaries('Scott')
+
+//    var add = function(a, b, c) {
+    //        return a + b + c
+    //    }
+    //
+    //    var memoizedAdd = func.memoize(add)
+    //
+    //    console.time('use memoize')
+    //    for(var i = 0; i < 10; i++) {
+    //        memoizedAdd(1, 2, 3)
+    //    }
+    //    console.timeEnd('use memoize')
+
+//    var add = function(a, b, c) {
+//        return a + b + c
+//    }
+//
+//    var memoizedAdd = func.underscoreMemoize(add,function (args) {
+//        console.log(args)
+//        return JSON.stringify(Array.prototype.slice.call(arguments))
+//    })
+//
+//    console.log(memoizedAdd(1, 2, 3)) // 6
+//    console.log(memoizedAdd(1, 2, 4)) // 6
+    function factorial(n, res) {
+        if (n == 1) return res;
+        return factorial(n - 1, n * res)
+    }
+
+    console.log(factorial(4, 1)) // 24
+</script>
+</body>
+</html>

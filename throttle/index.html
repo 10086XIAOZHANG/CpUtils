@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Throttle</title>
+    <style type="text/css">
+        .u-link{
+            display: block;
+            width: 100px;
+            background: #CAE1FF;
+            border-radius: 2px;
+            color: #333;
+            cursor:pointer;
+        }
+        .u-show{
+            color: #9BCD9B;
+            height: 20px;
+            font-size: x-large;
+        }
+    </style>
+</head>
+<body>
+<div class="u-link">时间节流</div>
+<div class="u-show"></div>
+<script type="text/javascript">
+   function showText(text) {
+       console.log(text);
+   }
+    function throttle(func,timeSpan,immediate) {
+       var context=this;
+       var timer=null;
+//       var  previous =0;
+//       var timer=null;
+//       return function (e) {
+//           e.preventDefault();
+//           var now=+new Date();
+////           if(now-previous>timeSpan){
+////               func.call(context,now);
+////               previous=now;
+////           }
+//           if(!timer){
+//               timer = setTimeout(function () {
+//                   timer=null;
+//                   func.call(context, now)
+//               }, timeSpan)
+//           }
+//       }
+//        var timeout, context, args, result;
+//        var previous = 0;
+//
+//        var later = function() {
+//            previous = +new Date();
+//            timeout = null;
+//            func.apply(context, args)
+//        };
+//
+//        var throttled = function(e) {
+//            e.preventDefault()
+//            var now = +new Date();
+//            //下次触发 func 剩余的时间
+//            var remaining = timeSpan - (now - previous);
+//            context = this;
+//            args = arguments;
+//            // 如果没有剩余的时间了或者你改了系统时间
+//            if (remaining <= 0 || remaining > timeSpan) {
+//                if (timeout) {
+//                    clearTimeout(timeout);
+//                    timeout = null;
+//                }
+//                previous = now;
+//                func.apply(context, args);
+//            } else if (!timeout) {
+//                timeout = setTimeout(later, remaining);
+//            }
+//        };
+//        return throttled;
+        return function (e) {
+            e.preventDefault();
+            var arg=arguments;
+            timer || clearTimeout(timer);
+            if(immediate){
+                if(!timer){
+                    func.apply(context,arg);
+                }else{
+                    timer = setTimeout(function(){
+                        timer = null;
+                    }, timeSpan)
+                }
+            }else{
+                timer= setTimeout(function () {
+                    func.apply(context,arg);
+                },timeSpan)
+            }
+        }
+    }
+    var a=document.getElementsByClassName('u-link')[0];
+    a.onmousemove =throttle(showText,2000,false)
+
+</script>
+</body>
+</html>
